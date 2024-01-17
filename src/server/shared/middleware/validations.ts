@@ -27,11 +27,12 @@ export const validation: TValidation = (schemas) => async (req, res, next) => {
             errorsResult[key] = errors;
         }
     });
-
-    if(Object.entries(errorsResult).length == 0){
+    console.log(Object.entries(errorsResult).length);
+    if (Object.entries(errorsResult).length == 0) {
         return next();
     } 
     else {
+        console.log(errorsResult);
         return res.status(StatusCodes.BAD_REQUEST).json({ errors: errorsResult });
     }
 };
