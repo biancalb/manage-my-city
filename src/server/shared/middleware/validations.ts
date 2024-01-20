@@ -13,7 +13,6 @@ export const validation: TValidation = (schemas) => async (req, res, next) => {
     Object.entries(schemas).forEach(([key, schema]) =>{
         try {
             schema.validateSync(req[key as TProperty], { abortEarly: false});
-            return next();
             
         } catch (err) {
             const yupError = err as yup.ValidationError;
@@ -28,6 +27,7 @@ export const validation: TValidation = (schemas) => async (req, res, next) => {
         }
     });
     console.log(Object.entries(errorsResult).length);
+    
     if (Object.entries(errorsResult).length == 0) {
         return next();
     } 
