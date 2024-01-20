@@ -2,24 +2,41 @@ import { Request, Response } from 'express';
 import * as yup from 'yup';
 import { validation } from '../../shared/middleware/validations';
 import { StatusCodes } from 'http-status-codes';
+import { CidadesProvider } from '../../database/providers/cidades';
 
 interface IQueryProps {
     page?: number;
     limit?: number;
-    filter?: number;
+    filter?: string;
+    id?: number;
 }
 
-const getValidation: yup.ObjectSchema<IQueryProps> = yup.object().shape({
+const getAllQueryValidation: yup.ObjectSchema<IQueryProps> = yup.object().shape({
     page: yup.number().optional().moreThan(0),
     limit: yup.number().optional().moreThan(0),
-    filter: yup.number().optional(),
+    filter: yup.string().optional(),
+    id: yup.number().integer().optional().default(0),
 });
 
 export const getAllValidation = validation({
-    query: getValidation,
+    query: getAllQueryValidation,
 });
 
 export const getAll = async (req: Request<{}, {}, {}, IQueryProps>, res: Response) => {
-    console.log(req.query);
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Not implemented');
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 7;
+    const filter = req.query.filter || '';
+    const id = req.query.id;
+
+    const result = await CidadesProvider.getAll(page, limit, filter, id);
+
+    if(result instanceof Error){
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            errors: {
+                default: result.message
+            }
+        });
+    }
+
+    return res.status(StatusCodes.OK).json(result);
 };
