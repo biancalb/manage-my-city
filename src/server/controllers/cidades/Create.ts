@@ -17,6 +17,7 @@ export const createValidation = validation({
 
 export const create = async (req: Request<{}, {}, IBodyProps>, res: Response) => {
     const result = await CidadesProvider.create(req.body);
+    
     if(result instanceof Error){
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             errors: {
@@ -24,5 +25,6 @@ export const create = async (req: Request<{}, {}, IBodyProps>, res: Response) =>
             }
         });
     }
+    
     return res.status(StatusCodes.CREATED).json(result);
 };

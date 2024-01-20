@@ -26,7 +26,7 @@ export const validation: TValidation = (schemas) => async (req, res, next) => {
             errorsResult[key] = errors;
         }
     });
-    console.log(Object.entries(errorsResult).length);
+    // console.log(Object.entries(errorsResult).length);
     
     if (Object.entries(errorsResult).length == 0) {
         return next();
