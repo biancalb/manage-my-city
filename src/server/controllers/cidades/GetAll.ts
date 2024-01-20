@@ -30,6 +30,8 @@ export const getAll = async (req: Request<{}, {}, {}, IQueryProps>, res: Respons
 
     const result = await CidadesProvider.getAll(page, limit, filter, id);
 
+    const count = await CidadesProvider.count(filter);
+
     if(result instanceof Error){
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             errors: {
@@ -37,6 +39,16 @@ export const getAll = async (req: Request<{}, {}, {}, IQueryProps>, res: Respons
             }
         });
     }
+    else if(count instanceof Error){
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            errors: {
+                default: count.message
+            }
+        });
+    }
+    
+    res.setHeader('access-control-expose-headers', 'x-total-count');
+    res.setHeader('x-total-count', count);
 
     return res.status(StatusCodes.OK).json(result);
 };
