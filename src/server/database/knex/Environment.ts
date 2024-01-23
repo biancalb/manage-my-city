@@ -11,7 +11,7 @@ export const development: Knex.Config = {
         directory: path.resolve(__dirname, '..', 'migrations'),
     },
     seeds: {
-        directory: path.resolve(__dirname, '..', 'migrations'),
+        directory: path.resolve(__dirname, '..', 'seeds'),
     },
     pool: {
         afterCreate: (connection: any, done: Function) => {
